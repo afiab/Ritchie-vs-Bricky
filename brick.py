@@ -15,6 +15,8 @@ player = pygame.Rect((300,250, 50, 50)) #xcor, ycor, xwidth, yheight
 run = True
 while run:
 
+    screen.fill((0,0,0)) #refresh the screen by filling it black
+
     pygame.draw.rect(screen, (255,0, 0), player) #screen name, rgb, rectangle name
     
     key = pygame.key.get_pressed() # know what key has been pressed
