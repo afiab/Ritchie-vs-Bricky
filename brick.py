@@ -119,10 +119,10 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(ritchie_bricks)<MAX_BRICKS: #ritchie
-                    brick = pygame.Rect(ritchie.x+ritchie.width, ritchie.y+ritchie.height//2-2, 10, 5)
+                    brick = pygame.Rect(ritchie.x+ritchie.width, ritchie.y+ritchie.height//2-2, 20, 10)
                     ritchie_bricks.append(brick)
                 if event.key == pygame.K_RCTRL and len(bricky_bricks)<MAX_BRICKS: #bricky
-                    brick = pygame.Rect(bricky.x, bricky.y+bricky.height//2-2, 10, 5)
+                    brick = pygame.Rect(bricky.x, bricky.y+bricky.height//2-2, 20, 10)
                     bricky_bricks.append(brick)
 
             if event.type == RITCHIE_HIT:
