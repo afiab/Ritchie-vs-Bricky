@@ -26,6 +26,26 @@ def draw_window(ritchie, bricky):
     WIN.blit(BRICKY_IMAGE, (bricky.x,bricky.y)) # image, coords
     pygame.display.update() # continuously update the display
 
+def ritchie_handle_movement(keys_pressed, ritchie):
+    if keys_pressed[pygame.K_a]: # LEFT
+        ritchie.x -= VEL 
+    if keys_pressed[pygame.K_d]: # RIGHT
+        ritchie.x += VEL 
+    if keys_pressed[pygame.K_w]: # UP
+        ritchie.y -= VEL 
+    if keys_pressed[pygame.K_s]: # DOWN
+        ritchie.y += VEL 
+
+def bricky_handle_movement(keys_pressed, bricky):
+    if keys_pressed[pygame.K_LEFT]: # LEFT
+        bricky.x -= VEL 
+    if keys_pressed[pygame.K_RIGHT]: # RIGHT
+        bricky.x += VEL 
+    if keys_pressed[pygame.K_UP]: # UP
+        bricky.y -= VEL 
+    if keys_pressed[pygame.K_DOWN]: # DOWN
+        bricky.y += VEL 
+
 def main():
     ritchie = pygame.Rect(100, 300, IMAGE_WIDTH, IMAGE_HEIGHT)
     bricky = pygame.Rect(700, 300, IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -39,14 +59,8 @@ def main():
                 run = False
 
         keys_pressed = pygame.key.get_pressed() #tell us currently pressed keys
-        if keys_pressed[pygame.K_a]: # LEFT
-            ritchie.x -= VEL 
-        if keys_pressed[pygame.K_d]: # RIGHT
-            ritchie.x += VEL 
-        if keys_pressed[pygame.K_w]: # UP
-            ritchie.y -= VEL 
-        if keys_pressed[pygame.K_s]: # DOWN
-            ritchie.y += VEL 
+        ritchie_handle_movement(keys_pressed, ritchie) #movement for ritchie
+        bricky_handle_movement(keys_pressed, bricky) #movement for bricky
 
         draw_window(ritchie, bricky)
 
