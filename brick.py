@@ -3,8 +3,8 @@ import pygame
 pygame.init() #initialize pygame
 
 # window
-SCREEN_WIDTH = 800 #pixel width
-SCREEN_HEIGHT = 600 #pixel height
+SCREEN_WIDTH = 800 # pixel width
+SCREEN_HEIGHT = 600 # pixel height
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) #create the screen
 
