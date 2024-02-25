@@ -1,41 +1,40 @@
 import pygame
-
-pygame.init() #initialize pygame
+import os
 
 # window
-SCREEN_WIDTH = 800 # pixel width
-SCREEN_HEIGHT = 600 # pixel height
+SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500 # pixel width, height
+WIN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) #create the screen
+pygame.display.set_caption("Ritchie vs Bricky") # set title of the window
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) #create the screen
+WHITE = (255,255,255) # pass in rgb vals as a tuple
 
-# create a rectangle that can move around
-player = pygame.Rect((300,250, 50, 50)) #xcor, ycor, xwidth, yheight
+FPS = 60 # Frames per second
 
-#loop the game window
-run = True
-while run:
+# sprites: Ritchie and Bricky
+RITCHIE_IMAGE = pygame.image.load(os.path.join('Assets', 'ritchie.png')) # ritchie
+RITCHIE_IMAGE = pygame.transform.scale(RITCHIE_IMAGE, (536/2.5,458/2.5)) #resize to size specified
+BRICKY_IMAGE = pygame.image.load(os.path.join('Assets', 'bricky.png')) # bricky
+BRICKY_IMAGE = pygame.transform.scale(BRICKY_IMAGE, (536/2.5,458/2.5)) #resize to size specified
 
-    screen.fill((0,0,0)) #refresh the screen by filling it black
+def draw_window():
+    #updates the window
+    WIN.fill(WHITE) # fill the window with White
+    WIN.blit(RITCHIE_IMAGE, (100,100)) # image, coords
+    WIN.blit(BRICKY_IMAGE, (400,100)) # image, coords
+    pygame.display.update() # continuously update the display
 
-    pygame.draw.rect(screen, (255,0, 0), player) #screen name, rgb, rectangle name
-    
-    key = pygame.key.get_pressed() # know what key has been pressed
-    # arrow key movement
-    if key[pygame.K_a]: # move left
-        player.move_ip( -1, 0) #player moves in place -1 right (so left), and none up
-    elif key[pygame.K_d]: # move right
-        player.move_ip( 1, 0) #player moves in place 1 right and none up
-    elif key[pygame.K_w]: # move up
-        player.move_ip( 0, -1) #player moves in place none right and up 1
-    elif key[pygame.K_s]: # move up
-        player.move_ip( 0, 1) #player moves in place none right and up 1
+def main():
+    clock = pygame.time.Clock() # to help do FPS
+    run = True
+    while run:
+        clock.tick(FPS) # control the Frame Rate
+        for event in pygame.event.get(): # loop through all the events
+            if event.type == pygame.QUIT:
+                run = False
 
-    #event handler, looks for events like mouse clicks and keyboard presses
-    for event in pygame.event.get(): #iterate through all events picked up by pygame
-        #closing the game window
-        if event.type == pygame.QUIT:
-            run = False;
+        draw_window()
 
-    pygame.display.update() # continuously refreshes the screen
+    pygame.quit()
 
-pygame.quit()
+if __name__ == "__main__":
+    main() # only run file directly
