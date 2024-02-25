@@ -1,5 +1,6 @@
 import pygame
 import os
+pygame.font.init()
 
 # window
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500 # pixel width, height
@@ -7,6 +8,9 @@ WIN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) #create the screen
 pygame.display.set_caption("Ritchie vs Bricky") # set title of the window
 
 BORDER = pygame.Rect(SCREEN_WIDTH//2 - 5, 0, 10, SCREEN_HEIGHT)
+
+HEALTH_FONT = pygame.font.SysFont('comicsans', 40)
+WINNER_FONT = pygame.font.SysFont('comicsans', 100)
 
 WHITE = (255,255,255) # pass in rgb vals as a tuple
 BLACK = (0,0,0)
@@ -18,7 +22,7 @@ VEL = 5 # Velocity
 BRICK_VEL = 7 # Velocity of bricks
 MAX_BRICKS = 3 # Maximum amt of bricks per player
 
-# sprites: Ritchie and Bricky
+# sprites: Ritchie and Bricky, Brick wall
 IMAGE_WIDTH, IMAGE_HEIGHT = 536/3,458/3
 
 RITCHIE_HIT = pygame.USEREVENT+1 #create a user event
@@ -27,12 +31,20 @@ BRICKY_HIT = pygame.USEREVENT+2 #create a user event, +1 and +2 distinguish even
 RITCHIE_IMAGE = pygame.image.load(os.path.join('Assets', 'ritchie.png')) # ritchie
 RITCHIE_IMAGE = pygame.transform.scale(RITCHIE_IMAGE, (IMAGE_WIDTH, IMAGE_HEIGHT)) #resize to size specified
 BRICKY_IMAGE = pygame.image.load(os.path.join('Assets', 'bricky.png')) # bricky
-BRICKY_IMAGE = pygame.transform.scale(BRICKY_IMAGE, (IMAGE_WIDTH, IMAGE_HEIGHT)) #resize to size specified
+BRICKY_IMAGE = pygame.transform.scale(BRICKY_IMAGE, (IMAGE_WIDTH, IMAGE_HEIGHT))#resize to size specified
 
-def draw_window(ritchie, bricky, ritchie_bricks, bricky_bricks):
+WALL = pygame.transform.scale(pygame.image.load(os.path.join('Assets', 'brick.jpg')), (SCREEN_WIDTH, SCREEN_HEIGHT)) 
+
+def draw_window(ritchie, bricky, ritchie_bricks, bricky_bricks, ritchie_health, bricky_health):
     #updates the window
-    WIN.fill(WHITE) # fill the window with White
+    WIN.blit(WALL, (0,0)) # fill the window with White
     pygame.draw.rect(WIN, BLACK, BORDER)
+
+    ritchie_health_text = HEALTH_FONT.render("Health: "+str(bricky_health), 1, WHITE)
+    bricky_health_text = HEALTH_FONT.render("Health: "+str(ritchie_health), 1, WHITE)
+    WIN.blit(ritchie_health_text, (SCREEN_WIDTH-ritchie_health_text.get_width()-10, 10))
+    WIN.blit(bricky_health_text, (10,10))
+
     WIN.blit(RITCHIE_IMAGE, (ritchie.x,ritchie.y)) # image, coords
     WIN.blit(BRICKY_IMAGE, (bricky.x,bricky.y)) # image, coords
 
@@ -80,12 +92,21 @@ def handle_bricks(ritchie_bricks, bricky_bricks, ritchie, bricky):
         elif brick.x < 0:
             ritchie_bricks.remove(brick)
 
+def draw_winner(text):
+    draw_txt = WINNER_FONT.render(text, 1, WHITE);
+    WIN.blit(draw_txt, (SCREEN_WIDTH/2 - draw_txt.get_width()/2, SCREEN_HEIGHT/2-draw_txt.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(5000)
+
 def main():
     ritchie = pygame.Rect(100, 300, IMAGE_WIDTH, IMAGE_HEIGHT)
     bricky = pygame.Rect(700, 300, IMAGE_WIDTH, IMAGE_HEIGHT)
 
     ritchie_bricks = []
     bricky_bricks = []
+
+    ritchie_health = 10
+    bricky_health = 10
 
     clock = pygame.time.Clock() # to help do FPS
     run = True
@@ -94,6 +115,7 @@ def main():
         for event in pygame.event.get(): # loop through all the events
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(ritchie_bricks)<MAX_BRICKS: #ritchie
@@ -103,15 +125,31 @@ def main():
                     brick = pygame.Rect(bricky.x, bricky.y+bricky.height//2-2, 10, 5)
                     bricky_bricks.append(brick)
 
+            if event.type == RITCHIE_HIT:
+                ritchie_health -=1
+            if event.type == BRICKY_HIT:
+                bricky_health -=1
+
+        winnertxt = ""
+        if ritchie_health <= 0:
+            winnertxt = "Bricky Wins!"
+        
+        if bricky_health <= 0:
+            winnertxt = "Ritchie Wins!"
+
+        if winnertxt:
+            draw_winner(winnertxt)
+            break
+
         keys_pressed = pygame.key.get_pressed() #tell us currently pressed keys
         ritchie_handle_movement(keys_pressed, ritchie) #movement for ritchie
         bricky_handle_movement(keys_pressed, bricky) #movement for bricky
 
         handle_bricks(ritchie_bricks, bricky_bricks, ritchie, bricky)
 
-        draw_window(ritchie, bricky, ritchie_bricks, bricky_bricks)
+        draw_window(ritchie, bricky, ritchie_bricks, bricky_bricks, ritchie_health, bricky_health)
 
-    pygame.quit()
+    main()
 
 if __name__ == "__main__":
     main() # only run file directly
