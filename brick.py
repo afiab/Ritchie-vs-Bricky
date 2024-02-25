@@ -46,7 +46,7 @@ def draw_window(ritchie, bricky, ritchie_bricks, bricky_bricks, ritchie_health, 
     WIN.blit(bricky_health_text, (10,10))
 
     WIN.blit(RITCHIE_IMAGE, (ritchie.x,ritchie.y)) # image, coords
-    WIN.blit(BRICKY_IMAGE, (bricky.x,bricky.y)) # image, coords
+    WIN.blit(BRICKY_IMAGE, (bricky.x,bricky.y)) # image, coosrds
 
     for brick in ritchie_bricks:
         pygame.draw.rect(WIN, ORANGE, brick)
@@ -83,14 +83,14 @@ def handle_bricks(ritchie_bricks, bricky_bricks, ritchie, bricky):
             pygame.event.post(pygame.event.Event(BRICKY_HIT))
             ritchie_bricks.remove(brick)
         elif brick.x > SCREEN_WIDTH:
-            bricky_bricks.remove(brick)
+            ritchie_bricks.remove(brick)
     for brick in bricky_bricks:
         brick.x-=BRICK_VEL
         if ritchie.colliderect(brick):
             pygame.event.post(pygame.event.Event(RITCHIE_HIT))
             bricky_bricks.remove(brick)
         elif brick.x < 0:
-            ritchie_bricks.remove(brick)
+            bricky_bricks.remove(brick)
 
 def draw_winner(text):
     draw_txt = WINNER_FONT.render(text, 1, WHITE);
