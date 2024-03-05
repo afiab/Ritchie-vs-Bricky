@@ -1,1 +1,1 @@
-# Ricky vs Bricky
+# Ritchie vs Bricky
